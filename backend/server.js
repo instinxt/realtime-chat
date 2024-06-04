@@ -1,8 +1,11 @@
 const express = require("express");
-const app = express();
-const { chats } = require("./data/chats");
+const chats = require("./data/chats");
 const dotenv = require("dotenv");
+const connectDB = require("./config/db");
+
 dotenv.config();
+connectDB();
+const app = express();
 
 const port = process.env.PORT || 5000;
 
