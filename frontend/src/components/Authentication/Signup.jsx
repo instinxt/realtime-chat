@@ -18,10 +18,10 @@ export const Signup = () => {
 	const [confirmpassword, setConfirmpassword] = useState();
 	const [password, setPassword] = useState();
 	const [pic, setPic] = useState();
-	const [picLoading, setPicLoading] = useState(false);
+	const [formLoading, setFormLoading] = useState(false);
 
 	const submitHandler = async () => {
-		setPicLoading(true);
+		setFormLoading(true);
 		if (!name || !email || !password || !confirmpassword) {
 			toast({
 				title: "Please Fill all the Fields",
@@ -30,7 +30,7 @@ export const Signup = () => {
 				isClosable: true,
 				position: "bottom",
 			});
-			setPicLoading(false);
+			setFormLoading(false);
 			return;
 		}
 		if (password !== confirmpassword) {
@@ -51,7 +51,7 @@ export const Signup = () => {
 				},
 			};
 			const { data } = await axios.post(
-				"/api/user",
+				"/api/user/signup",
 				{
 					name,
 					email,
@@ -69,7 +69,7 @@ export const Signup = () => {
 				position: "bottom",
 			});
 			localStorage.setItem("userInfo", JSON.stringify(data));
-			setPicLoading(false);
+			setFormLoading(false);
 			history.push("/chats");
 		} catch (error) {
 			toast({
@@ -80,12 +80,12 @@ export const Signup = () => {
 				isClosable: true,
 				position: "bottom",
 			});
-			setPicLoading(false);
+			setFormLoading(false);
 		}
 	};
 
 	const postDetails = (pics) => {
-		setPicLoading(true);
+		setFormLoading(true);
 		if (pics === undefined) {
 			toast({
 				title: "Please Select an Image!",
@@ -99,10 +99,14 @@ export const Signup = () => {
 		console.log(pics);
 		if (pics.type === "image/jpeg" || pics.type === "image/png") {
 			const data = new FormData();
+			const uploadPreset = import.meta.env.VITE_UPLOAD_PRESET;
+			const cloudname = import.meta.env.VITE_CLOUD_NAME;
+			const cloudinaryUrl = import.meta.env.VITE_CLOUDINARY_URL;
 			data.append("file", pics);
-			data.append("upload_preset", "chat-app");
-			data.append("cloud_name", "piyushproj");
-			fetch("https://api.cloudinary.com/v1_1/piyushproj/image/upload", {
+			data.append("upload_preset", uploadPreset);
+			data.append("cloud_name", cloudname);
+
+			fetch(cloudinaryUrl, {
 				method: "post",
 				body: data,
 			})
@@ -110,11 +114,18 @@ export const Signup = () => {
 				.then((data) => {
 					setPic(data.url.toString());
 					console.log(data.url.toString());
-					setPicLoading(false);
+					setFormLoading(false);
+					toast({
+						title: "Image uploaded successfully!",
+						status: "success",
+						duration: 5000,
+						isClosable: true,
+						position: "bottom",
+					});
 				})
 				.catch((err) => {
 					console.log(err);
-					setPicLoading(false);
+					setFormLoading(false);
 				});
 		} else {
 			toast({
@@ -124,7 +135,7 @@ export const Signup = () => {
 				isClosable: true,
 				position: "bottom",
 			});
-			setPicLoading(false);
+			setFormLoading(false);
 			return;
 		}
 	};
@@ -190,7 +201,7 @@ export const Signup = () => {
 				width="100%"
 				style={{ marginTop: 15 }}
 				onClick={submitHandler}
-				isLoading={picLoading}
+				isLoading={formLoading}
 			>
 				Sign Up
 			</Button>
