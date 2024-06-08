@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/layout";
 import "./styles.css";
-// import SingleChat from "./SingleChat";
+import SingleChat from "./SingleChat";
 import { ChatState } from "../Context/ChatProvider";
 
 export const ChatBox = ({ fetchAgain, setFetchAgain }) => {
@@ -18,7 +18,7 @@ export const ChatBox = ({ fetchAgain, setFetchAgain }) => {
 			borderColor="black"
 			borderWidth="3px"
 		>
-			{/* <SingleChat fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} /> */}
+			<SingleChat fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
 		</Box>
 	);
 };
